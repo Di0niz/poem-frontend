@@ -1,95 +1,72 @@
+"use client"
 import Image from 'next/image'
-import styles from './page.module.css'
+import React, { useState } from 'react'
 
-export default function Home() {
+const poem = `Приветствую тебя, пустынный уголок,
+Приют спокойствия, трудов и вдохновенья,
+Где льется дней моих невидимый поток
+На лоне счастья и забвенья.
+Я твой — я променял порочный двор Цирцей,
+Роскошные пиры, забавы, заблужденья
+На мирный шум дубров, на тишину полей,
+На праздность вольную, подругу размышленья.`;
+
+const Poem = () => {
+  const [hiddenWords, setHiddenWords] = useState([]);
+  const [showRandom, setShowRandom] = useState(false);
+  const [randomWordIndex, setRandomWordIndex] = useState(null);
+
+  const toggleWord = (word) => {
+    if (hiddenWords.includes(word)) {
+      setHiddenWords(hiddenWords.filter(w => w !== word));
+    } else {
+      setHiddenWords([...hiddenWords, word]);
+    }
+  };
+
+  const toggleRandom = () => {
+    // if (showRandom) {
+    //   setHiddenWords(hiddenWords.filter((_, index) => index !== randomWordIndex));
+    //   setShowRandom(false);
+    //   setRandomWordIndex(null);
+    // } else {
+      const words = poem.split(/\s+/);
+      const index = Math.floor(Math.random() * words.length);
+      const index1 = Math.floor(Math.random() * words.length);
+      const index2 = Math.floor(Math.random() * words.length);
+      const index3 = Math.floor(Math.random() * words.length);
+      setHiddenWords([...hiddenWords, words[index], words[index1], words[index2], words[index3]]);
+      setRandomWordIndex(index);
+    // }
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="d-flex justify-content-center align-items-center">
+      <div className="container text-center">
+        <div className='my-5'>
+          <Image
+            className="mx-auto"
+            src="/pushkin.png"
+            alt="Next.js Logo"
+            width={180}
+            height={180}
+            priority
+          />
         </div>
+        {poem.split('\n').map((line, lineIndex) => (
+          <div key={lineIndex}>
+            {line.split(/\s+/).map((word, wordIndex) => (
+              <span key={`${lineIndex}-${wordIndex}`}>
+                {hiddenWords.includes(word) ? <span className="badge text-bg-dark">___</span>: word}{' '}
+              </span>
+            ))}
+            <br />
+          </div>
+        ))}
+        <button onClick={toggleRandom} className="my-3 btn btn-primary">Hide</button>
       </div>
+    </div>
+  );
+};
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default Poem;
